@@ -16,10 +16,10 @@ async function createActivity(req, res) {
       activitySaved
     });
   } catch (error) {
-    console.log(error);
+ 
 
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -41,8 +41,8 @@ async function getActivities(req, res) {
       activities
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -56,8 +56,8 @@ async function getActivity(req, res) {
       activity
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -101,8 +101,8 @@ async function updateActivity(req, res) {
       activityUpdated
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -117,8 +117,8 @@ async function deleteActivity(req, res) {
       activityDeleted
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }

@@ -39,16 +39,8 @@ async function register(req, res) {
       userSaved
     });
   } catch (error) {
-    console.log(error);
-
-    if (error) {
-      return res.status(400).json({
-        message: error.errors?.email.message,
-        message: error.errors?.password.message
-      });
-    }
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -97,7 +89,7 @@ async function login(req, res) {
     }
   } catch (error) {
     return res.status(500).json({
-      message: 'Error al hacer login'
+      message: 'Internal Server Error'
     });
   }
 }
@@ -111,8 +103,8 @@ async function getUsers({ res }) {
       users
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error al listar los usuarios'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -141,8 +133,8 @@ async function getUser(req, res) {
       user
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error al listar los usuarios'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -199,10 +191,8 @@ async function updateUser(req, res) {
       user
     });
   } catch (error) {
-    console.log(error);
-
-    return res.status(400).json({
-      message: 'Error al actualizar el usuario'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -224,8 +214,8 @@ async function deleteUser(req, res) {
       userDeleted
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error al eliminar el usuario'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }

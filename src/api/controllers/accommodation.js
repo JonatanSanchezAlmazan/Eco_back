@@ -20,8 +20,8 @@ async function getAccommodations(req, res) {
       accommodations
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -34,8 +34,8 @@ async function getAccommodation(req, res) {
       accommodation
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -54,8 +54,8 @@ async function createAccommodations(req, res) {
       accommodationSaved
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
@@ -106,16 +106,16 @@ async function updateAccommodations(req, res) {
       accommodationUpdated
     });
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
 async function deleteAccommodations(req, res) {
   try {
   } catch (error) {
-    return res.status(400).json({
-      message: 'Error'
+    return res.status(500).json({
+      message: 'Internal Server Error'
     });
   }
 }
