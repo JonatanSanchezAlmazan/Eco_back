@@ -10,10 +10,10 @@ async function createActivity(req, res) {
       const imagePaths = req.files.images.map((file) => file.path);
       newActivity.images.push(...imagePaths);
     }
-    const activitySaved = await newActivity.save();
+    const activity= await newActivity.save();
     return res.status(201).json({
       message: 'Actividad creada correctamente',
-      activitySaved
+      activity
     });
   } catch (error) {
  

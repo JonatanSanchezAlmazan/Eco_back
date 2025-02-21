@@ -21,7 +21,7 @@ async function register(req, res) {
         deleteFile(req.file.path);
       }
       return res.status(400).json({
-        message: 'Usuario ya existente'
+        message: 'Usuario ya existente, pruebe con otras credenciales'
       });
     }
 
