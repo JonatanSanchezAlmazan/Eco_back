@@ -4,14 +4,9 @@ const { verifyToken } = require('../utils/jwt/jwt');
 async function isAuth(req, res, next) {
   try {
     const token = req.cookies.token;
-    console.log(req
-      
-    );
-    
+
     const { id } = verifyToken(token);
-    const user = await User.findById(id).select(
-      'name email image reservations isOwner'
-    );
+    const user = await User.findById(id).select('name email image reservations isOwner');
 
     req.user = user;
 

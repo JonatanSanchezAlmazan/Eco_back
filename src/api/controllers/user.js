@@ -49,9 +49,7 @@ async function login(req, res) {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email })
-      .select(' email password isOwner image')
-      
+    const user = await User.findOne({ email }).select(' email password isOwner image');
 
     if (!user) {
       return res.status(400).json({
@@ -66,13 +64,10 @@ async function login(req, res) {
       user.email = undefined;
 
       res.cookie('token', token, {
-        httpOnly:true,
-        secure:true,
-        sameSite:'strict'
-      })
-
-      
-      
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict'
+      });
 
       return res.status(200).json({
         message: 'Login realizado correctamente',
@@ -85,7 +80,7 @@ async function login(req, res) {
     }
   } catch (error) {
     console.log(error);
-    
+
     return res.status(500).json({
       message: 'Internal Server Error'
     });
@@ -218,4 +213,17 @@ async function deleteUser(req, res) {
   }
 }
 
-module.exports = { register, login, getUsers, getUser, updateUser, deleteUser };
+async function logout({ res }) {
+  try {
+    res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'Strict' });
+    return res.status(200).json({
+      message: '🌿 ¡Hasta pronto, explorador! 🌿'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+}
+
+module.exports = { register, login, getUsers, getUser, updateUser, deleteUser, logout };
