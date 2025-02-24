@@ -65,9 +65,17 @@ async function login(req, res) {
       user.rol = undefined;
       user.email = undefined;
 
+      res.cookie('token', token, {
+        httpOnly:true,
+        secure:true,
+        sameSite:'strict'
+      })
+
+      
+      
+
       return res.status(200).json({
         message: 'Login realizado correctamente',
-        token,
         user
       });
     } else {

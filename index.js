@@ -4,12 +4,19 @@ const { connectDB } = require('./src/config/db');
 const mainRouter = require('./src/api/routes/main');
 const { connectCloudinary } = require('./src/config/cloudinary');
 const cors = require('cors');
+const cookieParser = require('cookie-parser')
 
 const app = express();
+
+const corsOptions = {
+  origin: 'http://localhost:5173', 
+  credentials: true,
+};
 connectDB();
 connectCloudinary();
+app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use('/api/v1/ecoturismo', mainRouter);
 
 app.use('*', ({ res }) => {

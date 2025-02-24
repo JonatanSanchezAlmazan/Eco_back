@@ -3,7 +3,11 @@ const { verifyToken } = require('../utils/jwt/jwt');
 
 async function isAuth(req, res, next) {
   try {
-    const token = req.headers.authorization.replace('Bearer', '').trim();
+    const token = req.cookies.token;
+    console.log(req
+      
+    );
+    
     const { id } = verifyToken(token);
     const user = await User.findById(id).select(
       'name email image reservations isOwner'
@@ -14,7 +18,7 @@ async function isAuth(req, res, next) {
     next();
   } catch (error) {
     return res.status(401).json({
-      message: 'No estás autorizado'
+      message: 'No estás autorizado!!!!!!!!!!!!'
     });
   }
 }
