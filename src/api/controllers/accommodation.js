@@ -43,17 +43,18 @@ async function createAccommodations(req, res) {
   try {
     const newAccommodation = new Accommodation(req.body);
     newAccommodation.idAuthor = req.user._id.toString();
-    newAccommodation.author = req.user.name;
     if (req.files && req.files.images) {
       const imagePaths = req.files.images.map((file) => file.path);
       newAccommodation.images.push(...imagePaths);
     }
-    const accommodationSaved = await newAccommodation.save();
+    const accommodation = await newAccommodation.save();
     return res.status(200).json({
       message: 'Alojamiento creado correctamente',
-      accommodationSaved
+      accommodation
     });
   } catch (error) {
+    console.log(error);
+    
     return res.status(500).json({
       message: 'Internal Server Error'
     });

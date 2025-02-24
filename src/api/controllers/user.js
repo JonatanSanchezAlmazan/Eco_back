@@ -50,21 +50,8 @@ async function login(req, res) {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email })
-      .select('name email rol password image isOwner reservations')
-      .populate({
-        path: 'reservations',
-        populate: [
-          {
-            path: 'activityId',
-            select: 'name'
-          },
-          {
-            path: 'accommodationId',
-            select: 'name'
-          }
-        ]
-      })
-      .exec();
+      .select(' email password isOwner image')
+      
 
     if (!user) {
       return res.status(400).json({
@@ -76,6 +63,7 @@ async function login(req, res) {
       const token = generateSign(user._id);
       user.password = undefined;
       user.rol = undefined;
+      user.email = undefined;
 
       return res.status(200).json({
         message: 'Login realizado correctamente',
@@ -88,6 +76,8 @@ async function login(req, res) {
       });
     }
   } catch (error) {
+    console.log(error);
+    
     return res.status(500).json({
       message: 'Internal Server Error'
     });

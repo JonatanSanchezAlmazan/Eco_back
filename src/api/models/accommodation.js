@@ -61,7 +61,7 @@ const accommodationSchema = new mongoose.Schema(
     },
     images: [{ type: String }],
     idAuthor: { type: String, required: true },
-    author: { type: String, required: true }
+   
   },
   {
     timeseries: true,
