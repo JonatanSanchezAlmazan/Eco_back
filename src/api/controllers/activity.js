@@ -1,5 +1,7 @@
 const { deleteFile } = require('../../utils/cloudinary/deleteFile');
 const Activity = require('../models/activity');
+const Reservation = require('../models/reservation');
+const User = require('../models/user');
 
 async function createActivity(req, res) {
   try {
@@ -41,6 +43,8 @@ async function getActivities(req, res) {
       activities
     });
   } catch (error) {
+    console.log(error);
+    
     return res.status(500).json({
       message: 'Internal Server Error'
     });
@@ -66,9 +70,9 @@ async function updateActivity(req, res) {
   try {
     const { id } = req.params;
 
-    const { requirements, includes, ...allProperties } = req.body;
+    const { requirements, includes,  ...allProperties } = req.body;
     const oldActivity = await Activity.findById(id);
-    console.log(allProperties);
+    
 
     if (!oldActivity) {
       req.files.images.forEach((image) => deleteFile(image.path));
@@ -79,17 +83,19 @@ async function updateActivity(req, res) {
 
     if (req.files && req.files.images) {
       oldActivity.images.forEach((image) => deleteFile(image));
-      const newImages = req.files.images.map((file) => file.path);
-      updates.images = newImages;
+      req.body.images = req.files.images.map((file) => file.path);
+     
     }
 
-    const activityUpdated = await Activity.findByIdAndUpdate(
+    const activity = await Activity.findByIdAndUpdate(
       id,
       {
-        $set: { ...allProperties },
+        $set: { ...allProperties,
+          images:req.body.images || oldActivity.images
+         },
         $addToSet: {
           requirements: requirements || oldActivity.requirements,
-          includes: includes || oldActivity.includes
+          includes: includes || oldActivity.includes,
         }
       },
       {
@@ -98,9 +104,11 @@ async function updateActivity(req, res) {
     );
     return res.status(200).json({
       message: 'Actividad actualizada correctamente',
-      activityUpdated
+      activity
     });
-  } catch (error) {
+  } catch (error) {  
+    console.log(error);
+      
     return res.status(500).json({
       message: 'Internal Server Error'
     });
@@ -110,13 +118,27 @@ async function updateActivity(req, res) {
 async function deleteActivity(req, res) {
   try {
     const { id } = req.params;
-    const activityDeleted = await Activity.findByIdAndDelete(id, { new: true });
-    activityDeleted.images.forEach((image) => deleteFile(image));
-    return res.status(200).json({
-      message: 'Actividad eliminada correctamente',
-      activityDeleted
+    const users = await User.find();
+    const reservation = users.filter((user) => {
+      return user.reservations.activityId === id
     });
+    if(reservation.length === 0){
+      const activity = await Activity.findByIdAndDelete(id, { new: true });
+      activity.images.forEach((image) => deleteFile(image));
+      return res.status(200).json({
+        message: 'Actividad eliminada correctamente',
+        activity
+         });
+    }else{
+      return res.status(400).json({
+        message:'No puedes eliminar la actividad con reservas pendientes'
+      })
+    }
+    
+    
   } catch (error) {
+    console.log(error);
+    
     return res.status(500).json({
       message: 'Internal Server Error'
     });

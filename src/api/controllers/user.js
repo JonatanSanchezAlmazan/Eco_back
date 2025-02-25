@@ -66,7 +66,8 @@ async function login(req, res) {
       res.cookie('token', token, {
         httpOnly: true,
         secure: true,
-        sameSite: 'strict'
+        sameSite: 'strict',
+        maxAge:57600000
       });
 
       return res.status(200).json({
@@ -200,11 +201,11 @@ async function deleteUser(req, res) {
         message: 'No puedes eliminar la cuenta con reservas pendientes'
       });
     }
-    const userDeleted = await User.findByIdAndDelete(id, { new: true });
+    const user = await User.findByIdAndDelete(id, { new: true });
     deleteFile(oldUser.image);
     return res.status(200).json({
       message: 'Usuario eliminado correctamente',
-      userDeleted
+      user
     });
   } catch (error) {
     return res.status(500).json({
