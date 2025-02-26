@@ -4,6 +4,23 @@ const User = require('../models/user');
 const cloudinary = require('cloudinary').v2;
 const bcrypt = require('bcrypt');
 const emailRegex = require('../../utils/Variables/emailRegex');
+const jwt = require('jsonwebtoken');
+
+async function verifyToken(req, res) {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({ authenticated: false });
+    }
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    console.log(decoded);
+
+    res.json({ authenticated: true, user: decoded });
+  } catch (error) {
+    res.status(401).json({ authenticated: false });
+  }
+}
 
 async function register(req, res) {
   try {
@@ -67,7 +84,7 @@ async function login(req, res) {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',
-        maxAge:57600000
+        maxAge: 3600000
       });
 
       return res.status(200).json({
@@ -227,4 +244,4 @@ async function logout({ res }) {
   }
 }
 
-module.exports = { register, login, getUsers, getUser, updateUser, deleteUser, logout };
+module.exports = { verifyToken, register, login, getUsers, getUser, updateUser, deleteUser, logout };
