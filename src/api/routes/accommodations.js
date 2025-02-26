@@ -25,6 +25,7 @@ accommodationsRouter.put(
   '/updateAccommodation/:id',
   isAuth,
   isOwner(Accommodation),
+  upload.fields([{ name: 'images', maxCount: 3 }]),
   updateAccommodations
 );
 accommodationsRouter.delete(

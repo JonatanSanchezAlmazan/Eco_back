@@ -2,6 +2,7 @@ const { deleteFile } = require('../../utils/cloudinary/deleteFile');
 const emailRegex = require('../../utils/Variables/emailRegex');
 const phoneRegex = require('../../utils/Variables/phoneRegex');
 const Accommodation = require('../models/accommodation');
+const Reservation = require('../models/reservation');
 
 async function getAccommodations(req, res) {
   try {
@@ -64,15 +65,14 @@ async function updateAccommodations(req, res) {
   try {
     const { id } = req.params;
     const { services, rules, contactDetails, ...allProperties } = req.body;
+   
 
-    const { email, phone } = contactDetails;
-
-    if (email && !emailRegex.test(email)) {
+    if (contactDetails?.email && !emailRegex.test(email)) {
       return res.status(400).json({
         message: 'Introduce un email válido'
       });
     }
-    if (phone && !phoneRegex.test(phone)) {
+    if (contactDetails?.phone && !phoneRegex.test(phone)) {
       return res.status(400).json({
         message: 'Introduce un número de teléfono válido'
       });
@@ -82,19 +82,24 @@ async function updateAccommodations(req, res) {
     if (!oldAccommodation) {
       req.files.images.forEach((image) => deleteFile(image.path));
       return res.status(400).json({
-        message: 'Actividad no encontrada'
+        message: 'Alojamiento no encontrada'
       });
     }
+
+    
     if (req.files && req.files.images) {
       oldAccommodation.images.forEach((image) => deleteFile(image));
-      const newImages = req.files.images.map((file) => file.path);
-      updates.images = newImages;
+      req.body.images = req.files.images.map((file) => file.path);
+     
     }
-    const accommodationUpdated = await Accommodation.findByIdAndUpdate(
+    const accommodation = await Accommodation.findByIdAndUpdate(
       id,
       {
-        $set: { ...allProperties },
-        $set: { contactDetails },
+        $set: { ...allProperties,
+          images: req.body.images || oldAccommodation.images,
+          contactDetails: contactDetails || oldAccommodation.contactDetails,
+          
+         },
         $addToSet: {
           services: services || oldAccommodation.services,
           rules: rules || oldAccommodation.rules
@@ -104,9 +109,9 @@ async function updateAccommodations(req, res) {
     );
     return res.status(200).json({
       message: 'Alojamiento actualizado correctamente',
-      accommodationUpdated
+      accommodation
     });
-  } catch (error) {
+  } catch (error) {    
     return res.status(500).json({
       message: 'Internal Server Error'
     });
@@ -114,6 +119,27 @@ async function updateAccommodations(req, res) {
 }
 async function deleteAccommodations(req, res) {
   try {
+    const {id} = req.params;
+    const reservation = await Reservation.findOne({accommodationId: id})
+    console.log(reservation);
+    console.log(reservation);
+    
+
+    if(!reservation){
+    const accommodation = await Accommodation.findByIdAndDelete(id, {new:true});
+    accommodation.images.forEach(file => deleteFile(file));
+    return res.status(200).json({
+      message:'Alojamiento eliminado correctamente',
+      accommodation
+    })
+    }else{
+      return res.status(400).json({
+        message:'No puedes eliminar el alojamiento con reservas pendientes'
+      })
+    }
+    
+
+    
   } catch (error) {
     return res.status(500).json({
       message: 'Internal Server Error'

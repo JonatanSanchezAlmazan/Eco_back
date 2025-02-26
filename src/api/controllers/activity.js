@@ -112,11 +112,10 @@ async function updateActivity(req, res) {
 async function deleteActivity(req, res) {
   try {
     const { id } = req.params;
-    console.log(req.params);
+    
 
-    const { activityId } = req.params;
-    const reservation = await Reservation.findOne({ activityId: activityId });
-    console.log(reservation);
+    
+    const reservation = await Reservation.findOne({ activityId: id });
 
     if (!reservation) {
       const activity = await Activity.findByIdAndDelete(id, { new: true });
