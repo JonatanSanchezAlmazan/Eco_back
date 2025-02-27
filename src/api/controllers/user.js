@@ -6,22 +6,6 @@ const bcrypt = require('bcrypt');
 const emailRegex = require('../../utils/Variables/emailRegex');
 const jwt = require('jsonwebtoken');
 
-async function verifyToken(req, res) {
-  try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(401).json({ authenticated: false });
-    }
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    console.log(decoded);
-
-    res.json({ authenticated: true, user: decoded });
-  } catch (error) {
-    res.status(401).json({ authenticated: false });
-  }
-}
-
 async function register(req, res) {
   try {
     const user = new User(req.body);
@@ -80,7 +64,7 @@ async function login(req, res) {
       user.rol = undefined;
       user.email = undefined;
 
-      res.cookie('token', token, {
+      res.cookie('auth_token', token, {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',
@@ -233,9 +217,9 @@ async function deleteUser(req, res) {
 
 async function logout({ res }) {
   try {
-    res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'Strict' });
+    res.clearCookie('auth_token', { httpOnly: true, secure: true, sameSite: 'Strict' });
     return res.status(200).json({
-      message: '🌿 ¡Hasta pronto, explorador! 🌿'
+      message: '¡Hasta pronto, explorador!'
     });
   } catch (error) {
     return res.status(500).json({
@@ -244,4 +228,4 @@ async function logout({ res }) {
   }
 }
 
-module.exports = { verifyToken, register, login, getUsers, getUser, updateUser, deleteUser, logout };
+module.exports = { register, login, getUsers, getUser, updateUser, deleteUser, logout };
