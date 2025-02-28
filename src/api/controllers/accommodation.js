@@ -55,7 +55,7 @@ async function createAccommodations(req, res) {
     });
   } catch (error) {
     console.log(error);
-    
+
     return res.status(500).json({
       message: 'Internal Server Error'
     });
@@ -65,7 +65,6 @@ async function updateAccommodations(req, res) {
   try {
     const { id } = req.params;
     const { services, rules, contactDetails, ...allProperties } = req.body;
-   
 
     if (contactDetails?.email && !emailRegex.test(email)) {
       return res.status(400).json({
@@ -86,20 +85,14 @@ async function updateAccommodations(req, res) {
       });
     }
 
-    
     if (req.files && req.files.images) {
       oldAccommodation.images.forEach((image) => deleteFile(image));
       req.body.images = req.files.images.map((file) => file.path);
-     
     }
     const accommodation = await Accommodation.findByIdAndUpdate(
       id,
       {
-        $set: { ...allProperties,
-          images: req.body.images || oldAccommodation.images,
-          contactDetails: contactDetails || oldAccommodation.contactDetails,
-          
-         },
+        $set: { ...allProperties, images: req.body.images || oldAccommodation.images, contactDetails: contactDetails || oldAccommodation.contactDetails },
         $addToSet: {
           services: services || oldAccommodation.services,
           rules: rules || oldAccommodation.rules
@@ -111,7 +104,7 @@ async function updateAccommodations(req, res) {
       message: 'Alojamiento actualizado correctamente',
       accommodation
     });
-  } catch (error) {    
+  } catch (error) {
     return res.status(500).json({
       message: 'Internal Server Error'
     });
@@ -119,27 +112,21 @@ async function updateAccommodations(req, res) {
 }
 async function deleteAccommodations(req, res) {
   try {
-    const {id} = req.params;
-    const reservation = await Reservation.findOne({accommodationId: id})
-    console.log(reservation);
-    console.log(reservation);
-    
+    const { id } = req.params;
+    const reservation = await Reservation.findOne({ accommodationId: id });
 
-    if(!reservation){
-    const accommodation = await Accommodation.findByIdAndDelete(id, {new:true});
-    accommodation.images.forEach(file => deleteFile(file));
-    return res.status(200).json({
-      message:'Alojamiento eliminado correctamente',
-      accommodation
-    })
-    }else{
+    if (!reservation) {
+      const accommodation = await Accommodation.findByIdAndDelete(id, { new: true });
+      accommodation.images.forEach((file) => deleteFile(file));
+      return res.status(200).json({
+        message: 'Alojamiento eliminado correctamente',
+        accommodation
+      });
+    } else {
       return res.status(400).json({
-        message:'No puedes eliminar el alojamiento con reservas pendientes'
-      })
+        message: 'No puedes eliminar el alojamiento con reservas pendientes'
+      });
     }
-    
-
-    
   } catch (error) {
     return res.status(500).json({
       message: 'Internal Server Error'

@@ -197,7 +197,8 @@ async function deleteUser(req, res) {
     //!Tengo que eliminar los alojamientos y las actividades de este usuario
     const { id } = req.params;
     const oldUser = await User.findById(id);
-    if (oldUser.reservations.lenght > 0) {
+
+    if (oldUser.reservations.length > 0) {
       return res.status(400).json({
         message: 'No puedes eliminar la cuenta con reservas pendientes'
       });
@@ -209,6 +210,8 @@ async function deleteUser(req, res) {
       user
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       message: 'Internal Server Error'
     });
