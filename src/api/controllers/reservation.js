@@ -4,26 +4,26 @@ const User = require('../models/user');
 
 async function newReservation(req, res) {
   try {
-    const reservation = new Reservation(req.body);
+    const newreservation = new Reservation(req.body);
 
     const { _id } = req.user;
     const user = await User.findByIdAndUpdate(
       _id,
       {
         $push: {
-          reservations: reservation._id
+          reservations: newreservation._id
         }
       },
       { new: true }
     );
 
-    const reservationSaved = await reservation.save();
-    sendEmail(user, reservation, reservation.typeReservation);
+    const reservation = await newreservation.save();
+    sendEmail(user, newreservation, newreservation.typeReservation);
 
     return res.status(201).json({
       message: 'Reserva realizada correctamente',
       user,
-      reservationSaved
+      reservation
     });
   } catch (error) {
     console.log(error);

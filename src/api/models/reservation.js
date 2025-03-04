@@ -19,9 +19,7 @@ const reservationSchema = new mongoose.Schema(
     },
     entryDate: {
       type: String,
-      required: function () {
-        return this.typeReservation === 'Alojamiento';
-      }
+      required: true
     },
     exitDate: {
       type: String,
@@ -35,12 +33,7 @@ const reservationSchema = new mongoose.Schema(
         return this.typeReservation === 'Actividad';
       }
     },
-    day: {
-      type: String,
-      required: function () {
-        return this.typeReservation === 'Actividad';
-      }
-    },
+   
     typeReservation: {
       type: String,
       required: true,
