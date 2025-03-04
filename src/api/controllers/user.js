@@ -5,6 +5,8 @@ const cloudinary = require('cloudinary').v2;
 const bcrypt = require('bcrypt');
 const emailRegex = require('../../utils/Variables/emailRegex');
 const jwt = require('jsonwebtoken');
+const Accommodation = require('../models/accommodation');
+const Activity = require('../models/activity');
 
 async function register(req, res) {
   try {
@@ -197,6 +199,21 @@ async function deleteUser(req, res) {
     //!Tengo que eliminar los alojamientos y las actividades de este usuario
     const { id } = req.params;
     const oldUser = await User.findById(id);
+    const accommodations = await Accommodation.find({'idAuthor': id});
+    const activities = await Activity.find({'idAuthor': id});
+
+    if(accommodations){
+      return res.status(400).json({
+        message: 'No puedes eliminar la cuenta con alojamientos creados'
+      });
+    }
+
+    if(activities){
+      return res.status(400).json({
+        message: 'No puedes eliminar la cuenta con actividades creadas'
+      });
+    }
+    
 
     if (oldUser.reservations.length > 0) {
       return res.status(400).json({
