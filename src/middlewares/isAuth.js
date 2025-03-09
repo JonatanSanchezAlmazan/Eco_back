@@ -7,7 +7,7 @@ async function isAuth(req, res, next) {
 
     if (!token) {
       return res.status(401).json({
-        message: 'No estas autorizado!!!!!'
+        message: 'Parece que tu sesión ha caducado. Vuelve a iniciar sesión para continuar.'
       });
     }
 

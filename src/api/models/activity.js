@@ -1,6 +1,6 @@
-const moongose = require('mongoose');
+const mongoose = require('mongoose');
 
-const activitySchema = new moongose.Schema(
+const activitySchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     type: {
@@ -17,6 +17,19 @@ const activitySchema = new moongose.Schema(
       required: true,
       enum: ['Fácil', 'Moderada', 'Desafiante', 'Experto']
     },
+    contactDetails: {
+      email: {
+        type: String,
+        required: true,
+        lowercase: true,
+        match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Por favor ingrese un correo electrónico válido']
+      },
+      phone: {
+        type: String,
+        required: true,
+        match: [/^\d+$/, 'El teléfono solo puede contener números']
+      }
+    },
 
     requirements: { type: [String], required: true },
     images: [{ type: String }],
@@ -24,7 +37,7 @@ const activitySchema = new moongose.Schema(
     includes: { type: [String], required: true },
     schedule: { type: String, required: true },
     startTime: { type: String, required: true },
-    idAuthor: { type: String, required: true }
+    idAuthor: { type: mongoose.Types.ObjectId, ref: 'Users', required: true }
   },
   {
     timeseries: true,
@@ -33,5 +46,5 @@ const activitySchema = new moongose.Schema(
   }
 );
 
-const Activity = moongose.model('Activities', activitySchema, 'Activities');
+const Activity = mongoose.model('Activities', activitySchema, 'Activities');
 module.exports = Activity;

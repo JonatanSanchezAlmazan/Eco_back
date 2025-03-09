@@ -1,6 +1,7 @@
 const { deleteFile } = require('../../utils/cloudinary/deleteFile');
 const Activity = require('../models/activity');
 const Reservation = require('../models/reservation');
+const mongoose = require('mongoose');
 const User = require('../models/user');
 
 async function createActivity(req, res) {
@@ -18,6 +19,8 @@ async function createActivity(req, res) {
       activity
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       message: 'Internal Server Error'
     });
@@ -29,13 +32,22 @@ async function getActivities(req, res) {
     const parsedCapacity = Number(req.query.capacity);
     const { ubi = '', idAuthor = '' } = req.query;
 
-    const query = {
-      idAuthor: { $regex: idAuthor, $options: 'i' },
-      ubi: { $regex: ubi, $options: 'i' },
-      capacity: { $gte: parsedCapacity }
-    };
+    const query = {};
+
+    if (idAuthor && mongoose.Types.ObjectId.isValid(idAuthor)) {
+      query.idAuthor = new mongoose.Types.ObjectId(idAuthor);
+    }
+
+    if (ubi) {
+      query.ubi = { $regex: ubi, $options: 'i' };
+    }
+
+    if (parsedCapacity) {
+      query.capacity = { $gte: parsedCapacity };
+    }
 
     const activities = await Activity.find(query);
+
     return res.status(200).json({
       message: 'Actividades',
       activities

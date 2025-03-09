@@ -3,17 +3,26 @@ const emailRegex = require('../../utils/Variables/emailRegex');
 const phoneRegex = require('../../utils/Variables/phoneRegex');
 const Accommodation = require('../models/accommodation');
 const Reservation = require('../models/reservation');
+const mongoose = require('mongoose');
 
 async function getAccommodations(req, res) {
   try {
     const parsedCapacity = Number(req.query.capacity);
     const { ubi = '', idAuthor = '' } = req.query;
 
-    const query = {
-      idAuthor: { $regex: idAuthor, $options: 'i' },
-      ubi: { $regex: ubi, $options: 'i' },
-      capacity: { $gte: parsedCapacity }
-    };
+    const query = {};
+
+    if (idAuthor && mongoose.Types.ObjectId.isValid(idAuthor)) {
+      query.idAuthor = new mongoose.Types.ObjectId(idAuthor);
+    }
+
+    if (ubi) {
+      query.ubi = { $regex: ubi, $options: 'i' };
+    }
+
+    if (parsedCapacity) {
+      query.capacity = { $gte: parsedCapacity };
+    }
 
     const accommodations = await Accommodation.find(query);
     return res.status(200).json({
@@ -21,6 +30,7 @@ async function getAccommodations(req, res) {
       accommodations
     });
   } catch (error) {
+    log;
     return res.status(500).json({
       message: 'Internal Server Error'
     });
