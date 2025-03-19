@@ -7,12 +7,18 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const app = express();
+const corsOptions = {
+  origin: '*', // O un dominio específico si prefieres restringir los orígenes
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Permite el envío de cookies
+};
 
 connectDB();
 connectCloudinary();
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use('/api/v1/ecoturismo', mainRouter);
 
 app.use('*', ({ res }) => {
