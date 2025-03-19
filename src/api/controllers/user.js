@@ -137,7 +137,6 @@ async function getUser(req, res) {
 }
 
 async function updateUser(req, res) {
-  //!Tengo que actualizar los alojamientos y las actividades de este usuario
   try {
     const { id } = req.params;
     const { email } = req.body;
@@ -196,7 +195,6 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
   try {
-    //!Tengo que eliminar los alojamientos y las actividades de este usuario
     const { id } = req.params;
     const oldUser = await User.findById(id);
     const accommodations = await Accommodation.find({ idAuthor: id });

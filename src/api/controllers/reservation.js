@@ -4,23 +4,16 @@ const User = require('../models/user');
 
 async function getReservations(req, res) {
   try {
-    const { authorId } = req.params;
-    const reservations = await Reservation.find({
-      'activityId.idAuthor': authorId
-    }).populate('activityId');
+    const { id } = req.params;
 
-    // Si no se encuentran reservas, enviar mensaje adecuado
-    if (!reservations.length) {
-      return res.status(404).json({
-        message: 'No se encontraron reservas para este propietario de actividad.'
-      });
-    }
+    const reservations = await Reservation.find().populate({ path: 'activityId', select: 'idAuthor name -_id' }).populate({ path: 'accommodationId', select: 'idAuthor name -_id' }).populate({ path: 'userId', select: 'name -_id' }).select('entryDate exitDate hour -_id');
+
+    const filteredReservations = reservations.filter((r) => (r.activityId && r.activityId.idAuthor.toString() === id) || (r.accommodationId && r.accommodationId.idAuthor.toString() === id));
+
     return res.status(200).json({
-      reservations
+      reservations: filteredReservations
     });
   } catch (error) {
-    console.log(error);
-
     return res.status(500).json({
       message: 'Internal Server Error'
     });
@@ -93,16 +86,9 @@ async function deleteReservation(req, res) {
   try {
     const { id } = req.params;
     const { _id } = req.user;
-    const reservation = await Reservation.findById(id);
 
-    if (_id.toString() !== reservation.userId.toString()) {
-      return res.status(401).json({
-        message: 'No estas autorizado para realizar esta acción'
-      });
-    }
-
-    const reservationDeleted = await Reservation.findByIdAndDelete(id, { new: true });
-    const userSaved = await User.findByIdAndUpdate(
+    const reservation = await Reservation.findByIdAndDelete(id, { new: true });
+    await User.findByIdAndUpdate(
       _id,
       {
         $pull: { reservations: id }
@@ -110,11 +96,10 @@ async function deleteReservation(req, res) {
       { new: true }
     );
     const { user } = req;
-    sendEmail(user, reservation, 'Cancelar');
+    // sendEmail(user, reservation, 'Cancelar');
     return res.status(200).json({
-      message: 'Reserva eliminada correctamente',
-      userSaved,
-      reservationDeleted
+      message: 'Reserva eliminada correctamente, te hemos enviado un mensaje con la reserva cancleada',
+      reservation
     });
   } catch (error) {
     console.log(error);

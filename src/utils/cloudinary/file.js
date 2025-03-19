@@ -9,8 +9,8 @@ const storage = new CloudinaryStorage({
     folder: (req) => {
       return req.baseUrl.split('/').at(-1);
     },
-    allowedFormats: ['jpg', 'png', 'jpeg', 'gif', 'webp']
-    // transformation: [{ fetch_format: 'webp', quality: 'auto:good' }]
+    allowedFormats: ['jpg', 'png', 'jpeg', 'gif', 'webp'],
+    transformation: [{ fetch_format: 'webp', quality: 'auto:good' }]
   }
 });
 

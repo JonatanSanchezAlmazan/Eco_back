@@ -19,8 +19,24 @@ async function createActivity(req, res) {
       activity
     });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+}
 
+async function getRandomActivities(req, res) {
+  try {
+    const activities = await Activity.find();
+    if (activities.length < 2) {
+      return res.status(400).json({
+        message: 'No hay tres actividades'
+      });
+    }
+    const activitiesRandom = activities.sort(() => 0.5 - Math.random()).slice(0, 3);
+    return res.status(200).json(activitiesRandom);
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: 'Internal Server Error'
     });
@@ -150,6 +166,7 @@ module.exports = {
   createActivity,
   getActivities,
   getActivity,
+  getRandomActivities,
   updateActivity,
   deleteActivity
 };
