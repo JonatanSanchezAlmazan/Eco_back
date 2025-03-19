@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 const corsOptions = {
-  origin: '*', // O un dominio específico si prefieres restringir los orígenes
+  origin: 'https://eco-front-nine.vercel.app/', // O un dominio específico si prefieres restringir los orígenes
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true // Permite el envío de cookies
