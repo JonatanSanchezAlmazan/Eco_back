@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
@@ -9,10 +9,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
       lowercase: true,
-      match: [
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        'Por favor ingrese un correo electrónico válido'
-      ]
+      match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Por favor ingrese un correo electrónico válido']
     },
     password: {
       type: String,
@@ -21,15 +18,9 @@ const userSchema = new mongoose.Schema(
       minlength: [8, 'La contraseña debe tener al menos 8 caracteres'],
       validate: {
         validator: function (v) {
-          return (
-            /[a-z]/.test(v) &&
-            /[A-Z]/.test(v) &&
-            /[0-9]/.test(v) &&
-            /[!@#$%^&*(),.?":{}|<>]/.test(v)
-          );
+          return /[a-z]/.test(v) && /[A-Z]/.test(v) && /[0-9]/.test(v) && /[!@#$%^&*(),.?":{}|<>]/.test(v);
         },
-        message:
-          'La contraseña debe tener al menos una letra mayúscula, una minúscula, un número y un carácter especial'
+        message: 'La contraseña debe tener al menos una letra mayúscula, una minúscula, un número y un carácter especial'
       }
     },
     rol: {
