@@ -18,7 +18,7 @@ connectDB();
 connectCloudinary();
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors());
 app.use('/api/v1/ecoturismo', mainRouter);
 
 app.use('*', ({ res }) => {
