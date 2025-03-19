@@ -69,7 +69,7 @@ async function login(req, res) {
       res.cookie('auth_token', token, {
         httpOnly: true,
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'None',
         maxAge: 3600000
       });
 
