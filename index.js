@@ -9,8 +9,6 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const corsOptions = {
   origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 };
 
@@ -18,7 +16,7 @@ connectDB();
 connectCloudinary();
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use('/api/v1/ecoturismo', mainRouter);
 
 app.use('*', ({ res }) => {
