@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'https://eco-front-six.vercel.app/',
   credentials: true
 };
 connectDB();
