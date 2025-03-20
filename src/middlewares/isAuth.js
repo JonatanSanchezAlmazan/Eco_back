@@ -19,6 +19,7 @@ async function isAuth(req, res, next) {
     next();
   } catch (error) {
     return res.status(401).json({
+      error: error,
       message: 'No estas autorizado'
     });
   }
