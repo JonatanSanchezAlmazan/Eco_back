@@ -11,7 +11,7 @@ function isOwner(model) {
       }
 
       return res.status(401).json({
-        message: 'No estás autorizado'
+        message: 'Prueba'
       });
     } catch (error) {
       return res.status(500).json({
