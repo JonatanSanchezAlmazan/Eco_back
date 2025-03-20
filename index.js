@@ -10,6 +10,7 @@ const app = express();
 const corsOptions = {
   origin: 'https://eco-front-nine.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],
   credentials: true
 };
 
