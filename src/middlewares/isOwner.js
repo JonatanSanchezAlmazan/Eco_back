@@ -6,7 +6,7 @@ function isOwner(model) {
 
       const resource = await model.findById(id);
 
-      if (user.isOwner === true && (!resource || user._id.toString() === resource.idAuthor)) {
+      if (user.isOwner === true && (!resource || user._id.toString() === resource.idAuthor.toString())) {
         return next();
       }
 
