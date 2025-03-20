@@ -70,7 +70,9 @@ async function login(req, res) {
         httpOnly: true,
         secure: true,
         sameSite: 'None',
-        maxAge: 3600000
+        maxAge: 3600000,
+        domain: 'https://eco-back-ebon.vercel.app/',
+        path: '/'
       });
 
       return res.status(200).json({
@@ -234,7 +236,7 @@ async function deleteUser(req, res) {
 
 async function logout({ res }) {
   try {
-    res.clearCookie('auth_token', { httpOnly: true, secure: true, sameSite: 'Strict' });
+    res.clearCookie('auth_token', { httpOnly: true, secure: true, sameSite: 'None', domain: 'https://eco-back-ebon.vercel.app/', path: '/' });
     return res.status(200).json({
       message: '¡Hasta pronto, explorador!'
     });
