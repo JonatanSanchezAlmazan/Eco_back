@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 const corsOptions = {
+  // origin: 'http://localhost:5173',
   origin: 'https://eco-front-nine.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],

@@ -50,6 +50,26 @@ async function getAccommodation(req, res) {
     });
   }
 }
+
+async function getRandomAccommodations(req, res) {
+  try {
+    const accommodations = await Accommodation.find();
+    if (accommodations.length < 2) {
+      return res.status(400).json({
+        message: 'No hay tres actividades'
+      });
+    }
+    const accommodationsRandom = accommodations.sort(() => 0.5 - Math.random()).slice(0, 3);
+    return res.status(200).json(accommodationsRandom);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: error,
+      message: 'Internal Server Error'
+    });
+  }
+}
+
 async function createAccommodations(req, res) {
   try {
     const newAccommodation = new Accommodation(req.body);
@@ -147,6 +167,7 @@ async function deleteAccommodations(req, res) {
 module.exports = {
   getAccommodation,
   getAccommodations,
+  getRandomAccommodations,
   createAccommodations,
   updateAccommodations,
   deleteAccommodations
