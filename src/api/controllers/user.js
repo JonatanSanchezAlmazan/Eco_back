@@ -209,15 +209,17 @@ async function deleteUser(req, res) {
     const { id } = req.params;
     const oldUser = await User.findById(id);
     const accommodations = await Accommodation.find({ idAuthor: id });
+    console.log(accommodations);
+
     const activities = await Activity.find({ idAuthor: id });
 
-    if (accommodations) {
+    if (accommodations.length > 0) {
       return res.status(400).json({
         message: 'No puedes eliminar la cuenta con alojamientos creados'
       });
     }
 
-    if (activities) {
+    if (activities.length > 0) {
       return res.status(400).json({
         message: 'No puedes eliminar la cuenta con actividades creadas'
       });
