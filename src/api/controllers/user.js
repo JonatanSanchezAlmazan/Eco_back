@@ -31,7 +31,7 @@ async function register(req, res) {
     if (req.file) {
       user.image = req.file.path;
     } else {
-      const result = cloudinary.uploader.upload('./assets/user.png', { folder: 'users' });
+      const result = await cloudinary.uploader.upload('https://res.cloudinary.com/dusg4mmis/image/upload/v1742721442/users/sj6bpdw5di9hoxwi4pkk.png', { folder: 'users' });
       user.image = (await result).secure_url;
     }
 
@@ -43,6 +43,7 @@ async function register(req, res) {
     });
   } catch (error) {
     return res.status(500).json({
+      error: error,
       message: 'Internal Server Error'
     });
   }
