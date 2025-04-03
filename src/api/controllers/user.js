@@ -67,22 +67,22 @@ async function login(req, res) {
       user.rol = undefined;
       user.email = undefined;
 
-      // res.cookie('auth_token', token, {
-      //   httpOnly: true,
-      //   secure: false,
-      //   sameSite: 'Lax',
-      //   maxAge: 3600000,
-      //   path: '/'
-      // });
-
       res.cookie('auth_token', token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'None',
+        secure: false,
+        sameSite: 'Lax',
         maxAge: 3600000,
-        domain: '.eco-back-ebon.vercel.app',
         path: '/'
       });
+
+      // res.cookie('auth_token', token, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: 'None',
+      //   maxAge: 3600000,
+      //   domain: '.eco-back-ebon.vercel.app',
+      //   path: '/'
+      // });
 
       return res.status(200).json({
         message: 'Login realizado correctamente',
