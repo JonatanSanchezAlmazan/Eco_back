@@ -2,7 +2,6 @@ const { deleteFile } = require('../../utils/cloudinary/deleteFile');
 const Activity = require('../models/activity');
 const Reservation = require('../models/reservation');
 const mongoose = require('mongoose');
-const User = require('../models/user');
 
 async function createActivity(req, res) {
   try {
@@ -46,6 +45,8 @@ async function getRandomActivities(req, res) {
 
 async function getActivities(req, res) {
   try {
+    console.log(req);
+
     const parsedCapacity = Number(req.query.capacity);
     const { ubi = '', idAuthor = '' } = req.query;
 
